@@ -1,0 +1,37 @@
+
+
+package sysbase;
+
+public class Arbeider {
+    private final int arbeiderid;
+    private final String fornavn;
+    private final String etternavn;
+    private String adresse;
+    
+    public Arbeider(int arbeiderid, String fornavn, String etternavn, String adresse){
+        this.arbeiderid = arbeiderid;
+        this.fornavn = fornavn;
+        this.etternavn = etternavn;
+        this.adresse = adresse;
+    }
+    
+    public int getArbeiderid(){
+        return arbeiderid;
+    }
+    public String getFornavn(){
+        return fornavn;
+    }
+    public String getEtternavn(){
+        return etternavn;
+    }
+    public String getAdresse(){
+        return adresse;
+    }
+    public void setAdresse(String nyAdresse){
+        adresse = nyAdresse;        
+    }
+    @Override
+    public String toString(){
+        return "Arbeiderid: " + arbeiderid + "\nNavn" + fornavn + " " + etternavn + "\nAdresse: " + adresse; 
+    }
+}
