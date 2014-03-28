@@ -1,236 +1,37 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package sysbase;
+import sysbase.*;
 
 import java.sql.*;
-import static javax.swing.JOptionPane.*;
 
-class Opprydder {
-  public static void lukkResSet(ResultSet res) {
-    try {
-      if (res != null) {
-        res.close();
-      }
-    } catch (SQLException e) {
-      skrivMelding(e, "lukkResSet()");
+
+
+public class SysBase {
+
+    
+    public static void main(String[] args) throws Exception{
+        String databasedriver = "com.mysql.jdbc.Driver";
+        Class.forName(databasedriver).newInstance();
+        Database d1 = new Database("jdbc:mysql://sysbase.c8sw1q2ycxpw.eu-west-1.rds.amazonaws.com:3306/SysBase?user=SysBase&password=sysbasepw");
+        try{
+            Kunde kunde = new Kunde(1,"Olsen Regnskap AS", 97478755,"Kongensgate 3");
+            boolean b1 = d1.regNyKunde(kunde);
+            Date k1 = new Date(2014-1900, 03, 28);
+            Date k2 = new Date(2014-1900, 03, 29);
+            Jobb jobb = new Jobb(9,kunde.getAdresse(), k1, k2, "Trehugging", true, kunde.getKundenr());
+            boolean l1 = d1.regNyJobb(jobb);
+            System.out.println(b1 + "\n" + l1);
+            System.out.println(d1.getKundeGittNr(1));
+            d1.lukkForbindelse();
+        }catch(SQLException e){
+            System.out.println("Noe gikk galt!");
+            d1.lukkForbindelse();
+        }
     }
-  }
-
-  public static void lukkSetning(Statement stm) {
-    try {
-      if (stm != null) {
-        stm.close();
-      }
-    } catch (SQLException e) {
-      skrivMelding(e, "lukkSetning()");
-    }
-  }
-
-  public static void lukkForbindelse(Connection forbindelse) {
-    try {
-      if (forbindelse != null) {
-        forbindelse.close();
-      }
-    } catch (SQLException e) {
-      skrivMelding(e, "lukkForbindelse()");
-    }
-  }
-
-  public static void rullTilbake(Connection forbindelse) {
-    try {
-      if (forbindelse != null && !forbindelse.getAutoCommit()) {
-        forbindelse.rollback();
-      }
-    } catch (SQLException e) {
-      skrivMelding(e, "rollback()");
-    }
-  }
-
-  public static void settAutoCommit(Connection forbindelse) {
-    try {
-      if (forbindelse != null && !forbindelse.getAutoCommit()) {
-        forbindelse.setAutoCommit(true);
-      }
-    } catch (SQLException e) {
-      skrivMelding(e, "settAutoCommit()");
-    }
-  }
-
-  public static void skrivMelding(Exception e, String melding) {
-    System.err.println("Feil oppstått: " + melding + ".");
-    e.printStackTrace(System.err);
-  }
-
-}
-
-class Kunde{
-	private int kundenr;
-	private String kundenavn;
-	private String adresse;
-
-	public Kunde(int kundenr, String kundenavn, String adresse){
-		this.kundenr = kundenr;
-		this.kundenavn = kundenavn;
-		this.adresse = adresse;
-	}
-	public int getKundenr(){
-		return kundenr;
-	}
-	public String getKundenavn(){
-		return kundenavn;
-	}
-	public String getAdresse(){
-		return adresse;
-	}
-	public String toString(){
-		return "Kundenr: " + kundenr + "\nNavn: " + kundenavn + "\nAdresse: " + adresse;
-	}
-}
-
-class Jobb{
-	private int jobbid;
-	private String adresse;
-	private Date fradato;
-	private Date tildato;
-	private String beskrivelse;
-	private boolean arbeidsomraade;
-	private int kundenr;
-
-	public Jobb(int jobbid, String adresse, Date fradato, Date tildato, String beskrivelse, boolean arbeidsomraade, int kundenr){
-		this.jobbid = jobbid;
-		this.adresse = adresse;
-		this.fradato = fradato;
-		this.tildato = tildato;
-		this.beskrivelse = beskrivelse;
-		this.arbeidsomraade = arbeidsomraade;
-		this.kundenr = kundenr;
-	}
-	public int getJobbid(){
-		return jobbid;
-	}
-	public String getAdresse(){
-		return adresse;
-	}
-	public Date getFradato(){
-		return fradato;
-	}
-	public Date getTildato(){
-		return tildato;
-	}
-	public String getBeskrivelse(){
-		return beskrivelse;
-	}
-	public boolean getArbeidsomraade(){
-		return arbeidsomraade;
-	}
-	public int getKundenr(){
-		return kundenr;
-	}
-
-
-	public String toString(){
-		String svar = "Jobbid: " + jobbid + "\nAdresse: " + adresse + "\nFra: " + fradato + "\nTil: " + tildato + "Beskrivelse: " + beskrivelse + "\nArbeidsområde: ";
-		if(arbeidsomraade == true){
-			svar += " Ute";
-		} else{
-			svar += " Inne";
-		}
-		String m1 = "\nKundenr: " + kundenr;
-		svar += m1;
-		return svar;
-	}
-}
-
-class Database {
-	private Connection forbindelse;
-
-	Database(String dbNavn) throws SQLException {
-		forbindelse = DriverManager.getConnection(dbNavn);
-
-	}
-
-	void lukkForbindelse() throws SQLException{
-		if(forbindelse != null){
-			forbindelse.close();
-		}
-	}
-	public boolean regNyKunde(Kunde nyKunde) throws Exception{
-		int svar = -1;
-		Statement setning = null;
-		boolean u = false;
-		String b1 = "insert into kunde values(" + nyKunde.getKundenr() + ", '" + nyKunde.getKundenavn() + "','" + nyKunde.getAdresse() + "')";
-		try{
-			Opprydder.settAutoCommit(forbindelse);
-			setning = forbindelse.createStatement();
-			svar = setning.executeUpdate(b1);
-			if(svar == 0 || svar == -1){
-				return u;
-			}else{
-				u = true;
-			}
-			forbindelse.commit();
-
-		}catch (SQLException b){
-			Opprydder.rullTilbake(forbindelse);
-		} finally{
-			Opprydder.lukkSetning(setning);
-			Opprydder.settAutoCommit(forbindelse);
-		}
-		return u;
-	}
-
-	public Connection getForbindelse(){
-			return forbindelse;
-	}
-
-	public Kunde getKundeGittNr(int kundenr) throws Exception{
-		String s1 = "select kundenavn from kunde where kundenr = " + kundenr;
-		String a1 = "select adresse from kunde where kundenr = " + kundenr;
-		String kundenavn = null;
-		String adresse = null;
-		Kunde kunde = null;
-		ResultSet res = null;
-		Statement setning = null;
-		try{
-			forbindelse.setAutoCommit(false);
-			setning = forbindelse.createStatement();
-			res = setning.executeQuery(s1);
-			res.next();
-			kundenavn = res.getString(1);
-			res = setning.executeQuery(a1);
-			res.next();
-			adresse = res.getString(1);
-			kunde = new Kunde(kundenr, kundenavn, adresse);
-			forbindelse.commit();
-		} catch (SQLException e){
-			Opprydder.rullTilbake(forbindelse);
-		} finally {
-			forbindelse.setAutoCommit(true);
-			Opprydder.lukkForbindelse(forbindelse);
-		}
-		return kunde;
-	}
-}
-
-class SysBase{
-	public static void main(String[] args) throws Exception{
-		String databasedriver = "org.apache.derby.jdbc.ClientDriver";
-		Class.forName(databasedriver);
-		Database d1 = new Database("jdbc:derby://localhost:1527/SysBase;user=team13;password=team13");
-		try{
-
-			System.out.println("Forbindelse opprettet");
-			Kunde k1 = new Kunde(1, "Olsen Regnskap AS", "Kongensgate 3");
-			if(d1.regNyKunde(k1) == true){
-				System.out.println("Kunde registrert");
-			} else {
-				System.out.println("Kunden ble ikke registrert");
-			}
-			System.out.println(d1.getKundeGittNr(k1.getKundenr()));
-			d1.lukkForbindelse();
-			System.gc();
-		}catch(SQLException p){
-			System.out.println("Noe gikk galt!");
-			d1.lukkForbindelse();
-		}
-	}
 }
 
 
