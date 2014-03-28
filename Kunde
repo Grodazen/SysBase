@@ -1,21 +1,26 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 package sysbase;
 
+/**
+ *
+ * @author Endre
+ */
 public class Kunde {
-    private final int kundenr;
+    
     private String kundenavn;
     private int telefon;
     private String adresse;
 
-    public Kunde(int kundenr, String kundenavn, int telefon, String adresse){
-        this.kundenr = kundenr;
+    public Kunde(String kundenavn, int telefon, String adresse){
+       
 	this.kundenavn = kundenavn;
         this.telefon = telefon;
         this.adresse = adresse;
-    }
-    public int getKundenr(){
-        return kundenr;
     }
     public String getKundenavn(){
     	return kundenavn;
@@ -37,6 +42,6 @@ public class Kunde {
     }
     @Override
     public String toString(){
-	return "Kundenr: " + kundenr + "\nNavn: " + kundenavn +"\n" + telefon + "\nAdresse: " + adresse;
+	return "Navn: " + kundenavn +"\n" + telefon + "\nAdresse: " + adresse;
     }    
 }
