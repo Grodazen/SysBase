@@ -1,0 +1,15 @@
+
+
+package sysbase;
+
+public class Arkiv {
+    private Bruker[] brukere;
+    
+    public Arkiv(Bruker[] brukere){
+        this.brukere = brukere;
+    }
+    public Bruker[] getBrukere(){
+        return brukere;
+    }
+    
+}
