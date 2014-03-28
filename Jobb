@@ -1,27 +1,25 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 package sysbase;
 import java.sql.Date;
 
 public class Jobb {
-    private final int jobbid;
     private String adresse;
     private Date fradato;
     private Date tildato;
     private String beskrivelse;
     private boolean arbeidsomraade;
-    private final int kundeid;
 
-    public Jobb(int jobbid, String adresse, Date fradato, Date tildato, String beskrivelse, boolean arbeidsomraade, int kundenr){
-	    this.jobbid = jobbid;
-	    this.adresse = adresse;
-	    this.fradato = fradato;
-	    this.tildato = tildato;
-    	this.beskrivelse = beskrivelse;
-      this.arbeidsomraade = arbeidsomraade;
-    	this.kundeid = kundenr;
-    }
-    public int getJobbid(){
-    	return jobbid;
+    public Jobb(String adresse, Date fradato, Date tildato, String beskrivelse, boolean arbeidsomraade){
+	this.adresse = adresse;
+	this.fradato = fradato;
+	this.tildato = tildato;
+	this.beskrivelse = beskrivelse;
+        this.arbeidsomraade = arbeidsomraade;
     }
 	
     public String getAdresse(){
@@ -31,43 +29,39 @@ public class Jobb {
     	return fradato;
     }
     public Date getTildato(){
-    	return tildato;
+	return tildato;
     }
     public String getBeskrivelse(){
-	    return beskrivelse;
+	return beskrivelse;
     }
     public boolean getArbeidsomraade(){
-	    return arbeidsomraade;
-    }
-    public int getKundeid(){
-	    return kundeid;
-    }
+	return arbeidsomraade;
+    } 
+    
     public void setAdresse(String nyAdresse){
-      adresse = nyAdresse;
+        adresse = nyAdresse;
     }
     public void setFraDato(Date nyFraDato){
-      fradato = nyFraDato;
+        fradato = nyFraDato;
     }
     public void setTilDato(Date nyTilDato){
-      tildato = nyTilDato;
+        tildato = nyTilDato;
     }
     public void setBeskrivelse(String nyBeskrivelse){
-      beskrivelse = nyBeskrivelse;
+        beskrivelse = nyBeskrivelse;
     }
     public void setArbeidsomraade(boolean nyOmraade){
-      arbeidsomraade = nyOmraade;
+        arbeidsomraade = nyOmraade;
     }
 
     @Override
     public String toString(){
-	    String svar = "Jobbid: " + jobbid + "\nAdresse: " + adresse + "\nFra: " + fradato + "\nTil: " + tildato + "Beskrivelse: " + beskrivelse + "\nArbeidsområde: ";
-	    if(arbeidsomraade == true){
-		    svar += " Ute";
-	    } else{
-		    svar += " Inne";
-	    }
-	    String m1 = "\nKundeid: " + kundeid;
-	    svar += m1;
-      return svar;
+	String svar = "Adresse: " + adresse + "\nFra: " + fradato + "\nTil: " + tildato + "Beskrivelse: " + beskrivelse + "\nArbeidsområde: ";
+	if(arbeidsomraade == true){
+		svar += " Ute";
+	} else{
+		svar += " Inne";
+        }
+        return svar;
     }
 }
