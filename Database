@@ -1,0 +1,105 @@
+
+
+package sysbase;
+import java.sql.*;
+import sysbase.*;
+
+
+public class Database {
+    private Connection forbindelse;
+
+    Database(String dbNavn) throws SQLException {
+	forbindelse = DriverManager.getConnection(dbNavn);
+
+    }
+
+    void lukkForbindelse() throws SQLException{
+	if(forbindelse != null){
+		forbindelse.close();
+	}
+    }
+    public Connection getForbindelse(){
+        return forbindelse;
+    }
+    public Kunde getKundeGittNr(int kundeid) throws Exception{
+        String s1 = "select kundenavn from kunde where kundeid = " + kundeid;
+        String a1 = "select adresse from kunde where kundeid = " + kundeid;
+        String t1 = "select telefon from kunde where kundeid = " + kundeid;
+        String kundenavn = null;
+        int telefon = 0;
+        String adresse = null;
+        Kunde kunde = null;
+        ResultSet res = null;
+        Statement setning = null;
+        try{
+            Opprydder.settAutoCommit(forbindelse);
+            setning = forbindelse.createStatement();
+            res = setning.executeQuery(s1);
+            res.next();
+            kundenavn = res.getString(1);
+            res = setning.executeQuery(t1);
+            res.next();
+            telefon = res.getInt(1);
+            res = setning.executeQuery(a1);
+            res.next();
+            adresse = res.getString(1);
+            kunde = new Kunde(kundeid, kundenavn, telefon, adresse);
+            forbindelse.commit();
+        } catch (SQLException e){
+            Opprydder.rullTilbake(forbindelse);
+        } finally {
+            Opprydder.settAutoCommit(forbindelse);
+            Opprydder.lukkForbindelse(forbindelse);
+        }
+        return kunde;
+    }
+    public boolean regNyKunde(Kunde nyKunde) throws Exception{
+        int svar = -1;
+        Statement setning = null;
+        boolean u = false;
+        String b1 = "insert into kunde values(" + nyKunde.getKundenr() + ", '" + nyKunde.getKundenavn() + "',"+ nyKunde.getTelefon() + ",'" + nyKunde.getAdresse() + "')";
+        try{
+            Opprydder.settAutoCommit(forbindelse);
+            setning = forbindelse.createStatement();
+            svar = setning.executeUpdate(b1);
+            if(svar == 0 || svar == -1){
+                return u;
+            }else{
+                u = true;
+            }
+            forbindelse.commit();
+        }catch (SQLException b){
+            Opprydder.rullTilbake(forbindelse);
+        } finally{
+            Opprydder.lukkSetning(setning);
+            Opprydder.settAutoCommit(forbindelse);
+        }
+        return u;
+    }
+    public boolean regNyJobb(Jobb jobb) throws Exception{
+        int svar = -1;
+        Statement setning = null;
+        boolean b = false;
+        String j1 = "insert into jobb values(" + jobb.getJobbid() + ", '" + jobb.getAdresse() + "','" + jobb.getFradato().toString() + "' ,'" + jobb.getTildato().toString() + "', '" + jobb.getBeskrivelse() + "', " + jobb.getArbeidsomraade() + ", " + jobb.getKundeid()+")";
+        try{
+            forbindelse.setAutoCommit(false);
+            setning = forbindelse.createStatement();
+            svar = setning.executeUpdate(j1);
+            forbindelse.commit();
+            if(svar == 0 || svar == -1){
+                return false;
+            }else{
+                return true;
+            }
+            
+        }catch (SQLException e){
+            Opprydder.rullTilbake(forbindelse);
+            return false;
+        }finally{
+            Opprydder.lukkSetning(setning);
+            forbindelse.setAutoCommit(true);
+        }
+    }
+}
+
+
