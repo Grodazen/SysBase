@@ -1,0 +1,54 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package sysbase;
+
+/**
+ *
+ * @author Endre
+ */
+abstract class Bruker {
+    private final String brukernavn;
+    private String passord;
+    
+    public Bruker(String brukernavn, String passord){
+        this.brukernavn = brukernavn;
+        this.passord = passord;
+    }
+    public String getBrukernavn(){
+        return brukernavn;
+    }
+    private void setPassord(String nyPassord){
+        passord = nyPassord;
+    }
+    public boolean regNyPassord(String nyBrukernavn, String pass, String nyPass, String nyPassord){
+        if(nyBrukernavn.equals(brukernavn) && pass.equals(passord)){
+            if(nyPass.equals(nyPassord)){
+                setPassord(nyPass);
+                return true;
+            } else{
+                System.out.println("Du må skrive det nye passordet likt.");
+                return false;
+            } 
+        } else{
+            System.out.println("Feil brukernavn eller passord");
+            return false;
+        }
+}
+    
+}
+
+class Admin extends Bruker{
+    public Admin(String brukernavn, String passord){
+        super(brukernavn, passord);
+    }
+}
+
+class User extends Bruker{
+    public User(String brukernavn, String passord){
+        super(brukernavn,passord);
+    }
+}
