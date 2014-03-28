@@ -1,0 +1,73 @@
+
+package sysbase;
+import java.sql.Date;
+
+public class Jobb {
+    private final int jobbid;
+    private String adresse;
+    private Date fradato;
+    private Date tildato;
+    private String beskrivelse;
+    private boolean arbeidsomraade;
+    private final int kundeid;
+
+    public Jobb(int jobbid, String adresse, Date fradato, Date tildato, String beskrivelse, boolean arbeidsomraade, int kundenr){
+	    this.jobbid = jobbid;
+	    this.adresse = adresse;
+	    this.fradato = fradato;
+	    this.tildato = tildato;
+    	this.beskrivelse = beskrivelse;
+      this.arbeidsomraade = arbeidsomraade;
+    	this.kundeid = kundenr;
+    }
+    public int getJobbid(){
+    	return jobbid;
+    }
+	
+    public String getAdresse(){
+    	return adresse;
+    }
+    public Date getFradato(){
+    	return fradato;
+    }
+    public Date getTildato(){
+    	return tildato;
+    }
+    public String getBeskrivelse(){
+	    return beskrivelse;
+    }
+    public boolean getArbeidsomraade(){
+	    return arbeidsomraade;
+    }
+    public int getKundeid(){
+	    return kundeid;
+    }
+    public void setAdresse(String nyAdresse){
+      adresse = nyAdresse;
+    }
+    public void setFraDato(Date nyFraDato){
+      fradato = nyFraDato;
+    }
+    public void setTilDato(Date nyTilDato){
+      tildato = nyTilDato;
+    }
+    public void setBeskrivelse(String nyBeskrivelse){
+      beskrivelse = nyBeskrivelse;
+    }
+    public void setArbeidsomraade(boolean nyOmraade){
+      arbeidsomraade = nyOmraade;
+    }
+
+    @Override
+    public String toString(){
+	    String svar = "Jobbid: " + jobbid + "\nAdresse: " + adresse + "\nFra: " + fradato + "\nTil: " + tildato + "Beskrivelse: " + beskrivelse + "\nArbeidsområde: ";
+	    if(arbeidsomraade == true){
+		    svar += " Ute";
+	    } else{
+		    svar += " Inne";
+	    }
+	    String m1 = "\nKundeid: " + kundeid;
+	    svar += m1;
+      return svar;
+    }
+}
