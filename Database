@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 package sysbase;
 import java.sql.*;
@@ -43,7 +47,7 @@ public class Database {
             res = setning.executeQuery(a1);
             res.next();
             adresse = res.getString(1);
-            kunde = new Kunde(kundeid, kundenavn, telefon, adresse);
+            kunde = new Kunde(kundenavn, telefon, adresse);
             forbindelse.commit();
         } catch (SQLException e){
             Opprydder.rullTilbake(forbindelse);
@@ -57,11 +61,31 @@ public class Database {
         int svar = -1;
         Statement setning = null;
         boolean u = false;
-        String b1 = "insert into kunde values(" + nyKunde.getKundenr() + ", '" + nyKunde.getKundenavn() + "',"+ nyKunde.getTelefon() + ",'" + nyKunde.getAdresse() + "')";
+        String b1 = "select max(kundeid) from kunde";
+        String b2 = null;
+        String b3 = "select kundenavn from kunde where kundenavn = " + nyKunde.getKundenavn();
+        String kundenavn = null;
+        int kundeid = 0;
         try{
             Opprydder.settAutoCommit(forbindelse);
             setning = forbindelse.createStatement();
-            svar = setning.executeUpdate(b1);
+            /*
+            ResultSet res2 = setning.executeQuery(b3);
+            while(res2.next()){
+                kundenavn = res2.getString("kundenavn");
+            }
+            res2.close();
+            if(kundenavn !=null){
+                return false;
+            }
+                    */
+            try (ResultSet res = setning.executeQuery(b1)) {
+                while(res.next()){
+                    kundeid = res.getInt("max(kundeid)");
+                }
+            }
+            b2 = "insert into kunde values(" + (kundeid+1) + ", '" + nyKunde.getKundenavn() + "',"+ nyKunde.getTelefon() + ",'" + nyKunde.getAdresse() + "')";
+            svar = setning.executeUpdate(b2);
             if(svar == 0 || svar == -1){
                 return u;
             }else{
@@ -76,21 +100,36 @@ public class Database {
         }
         return u;
     }
-    public boolean regNyJobb(Jobb jobb) throws Exception{
+    public boolean regNyJobb(Jobb jobb, Kunde kunde) throws Exception{
         int svar = -1;
         Statement setning = null;
+        int jobbid = 0;
+        int kundeid = 1;
         boolean b = false;
-        String j1 = "insert into jobb values(" + jobb.getJobbid() + ", '" + jobb.getAdresse() + "','" + jobb.getFradato().toString() + "' ,'" + jobb.getTildato().toString() + "', '" + jobb.getBeskrivelse() + "', " + jobb.getArbeidsomraade() + ", " + jobb.getKundeid()+")";
+        String j1 = null;
+        String j2 = "select max(jobbid) from jobb";
+        String j3 = "select kundeid from kunde where kundenavn = " + kunde.getKundenavn();
         try{
             forbindelse.setAutoCommit(false);
             setning = forbindelse.createStatement();
+            try (ResultSet res = setning.executeQuery(j2)) {
+                while(res.next()){
+                    jobbid = res.getInt("max(jobbid)");
+                }
+                res.close();
+            }
+            
+            try (ResultSet res1 = setning.executeQuery(j3)) {
+                while(res1.next()){
+                    kundeid = res1.getInt("kundeid");
+                }
+                res1.close();
+            }
+
+            j1 = "insert into jobb values(" + (jobbid+1) + ", '" + jobb.getAdresse() + "','" + jobb.getFradato().toString() + "' ,'" + jobb.getTildato().toString() + "', '" + jobb.getBeskrivelse() + "', " + jobb.getArbeidsomraade() + ", " + kundeid + ")";
             svar = setning.executeUpdate(j1);
             forbindelse.commit();
-            if(svar == 0 || svar == -1){
-                return false;
-            }else{
-                return true;
-            }
+            return svar != 0 && svar != -1;
             
         }catch (SQLException e){
             Opprydder.rullTilbake(forbindelse);
