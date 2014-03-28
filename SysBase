@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package sysbase;
 import sysbase.*;
 
@@ -14,12 +18,12 @@ public class SysBase {
         Class.forName(databasedriver).newInstance();
         Database d1 = new Database("jdbc:mysql://sysbase.c8sw1q2ycxpw.eu-west-1.rds.amazonaws.com:3306/SysBase?user=SysBase&password=sysbasepw");
         try{
-            Kunde kunde = new Kunde(1,"Olsen Regnskap AS", 97478755,"Kongensgate 3");
+            Kunde kunde = new Kunde("Olsen Regnskap AS", 97478755,"Kongensgate 3");
             boolean b1 = d1.regNyKunde(kunde);
             Date k1 = new Date(2014-1900, 03, 28);
             Date k2 = new Date(2014-1900, 03, 29);
-            Jobb jobb = new Jobb(9,kunde.getAdresse(), k1, k2, "Trehugging", true, kunde.getKundenr());
-            boolean l1 = d1.regNyJobb(jobb);
+            Jobb jobb = new Jobb(kunde.getAdresse(), k1, k2, "Trehugging", true);
+            boolean l1 = d1.regNyJobb(jobb,kunde);
             System.out.println(b1 + "\n" + l1);
             System.out.println(d1.getKundeGittNr(1));
             d1.lukkForbindelse();
