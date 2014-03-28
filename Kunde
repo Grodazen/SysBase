@@ -1,0 +1,42 @@
+
+
+package sysbase;
+
+public class Kunde {
+    private final int kundenr;
+    private String kundenavn;
+    private int telefon;
+    private String adresse;
+
+    public Kunde(int kundenr, String kundenavn, int telefon, String adresse){
+        this.kundenr = kundenr;
+	this.kundenavn = kundenavn;
+        this.telefon = telefon;
+        this.adresse = adresse;
+    }
+    public int getKundenr(){
+        return kundenr;
+    }
+    public String getKundenavn(){
+    	return kundenavn;
+    }
+    public int getTelefon(){
+        return telefon;
+    }
+    public String getAdresse(){
+       	return adresse;
+    }
+    public void setKundenavn(String nyKundenavn){
+        kundenavn = nyKundenavn;
+    }
+    public void setTelefon(int nyTelefon){
+        telefon = nyTelefon;
+    }
+    public void setAdresse(String nyAdresse){
+        adresse = nyAdresse;
+    }
+    @Override
+    public String toString(){
+	return "Kundenr: " + kundenr + "\nNavn: " + kundenavn +"\n" + telefon + "\nAdresse: " + adresse;
+    }    
+}
